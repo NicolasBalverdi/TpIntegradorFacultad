@@ -10,24 +10,39 @@ import java.util.Scanner;
 
 public class Administrador extends Persona{
 	
-	public void crearCarrera() {
-		
-		System.out.println("Nombre de la carrera");
-		Scanner sc=new Scanner(System.in);
-		String nomCarrera=sc.nextLine();
-		
-		System.out.println("Cuantas materias tiene");
-		ArrayList<Materia>nCarrera=new ArrayList<>();
-		int cantM=sc.nextInt();
-		for(int i=0;i<cantM;i++) {
-			System.out.println("Nombre de la materia");
-			String nom=sc.nextLine();
-			Materia materia=new Materia(nom);
-			nCarrera.add(materia);
-		}
-		Carrera carrera=new Carrera(nomCarrera,cantM,nCarrera);
-		
-	}
+	public void insertarCarrera(Carrera carrera1, Connection conexion)throws SQLException{
+        Connection connection = conexion;
+        PreparedStatement as=null;
+        try {
+            as=connection.prepareStatement("INSERT INTO carreras VALUES (?,?)");
+            as.setString(1,carrera1.getNombre());
+            as.setInt(2,carrera1.getCantidadMaterias());
+			/* as.setArrayList<Materia>(5,carrera1.getMaterias()); */
+
+            int response = as.executeUpdate();
+            if (response>0) {
+                System.out.println("Insertado correctamente");
+                
+            as.close();
+            connection.close();
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Sqlstate: "+ sqle.getSQLState());
+            System.out.println("SlqError: "+ sqle.getErrorCode());
+            sqle.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally{
+            if (connection != null) {
+                try {
+                    as.close();
+                    connection.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 	
 	public void crearAdministrador(Connection conexion) 
 	{
@@ -40,7 +55,6 @@ public class Administrador extends Persona{
 		String apellido = sc.nextLine(); 
 		System.out.println("Nombre :");
 		String nombre = sc.nextLine();
-	
 		System.out.println("Documento :");
 		String documento = sc.nextLine();
 
@@ -56,16 +70,11 @@ public class Administrador extends Persona{
 			{
 				idpersona = rs.getInt("idPersona");
 			}
-			PreparedStatement stmt = conexion.prepareStatement("INSERT INTO persona VALUES (?,?,?,?,?)");
+			PreparedStatement stmt = conexion.prepareStatement("INSERT INTO persona VALUES (?,?,?,?)");
         	stmt.setInt(1,idpersona+1);
         	stmt.setString(2,nombre);
         	stmt.setString(3,apellido);
-       
         	stmt.setString(4,documento);
-        	
-        	
-        	
-        	
         	int response = stmt.executeUpdate();
         	if(response>0) 
         	{
@@ -80,7 +89,7 @@ public class Administrador extends Persona{
 			{
 				idadministrador = rs.getInt("idadministrador");
 			}
-        	PreparedStatement stmtadministrador = conexion.prepareStatement("INSERT INTO administrador VALUES (?,?,?)");
+        	PreparedStatement stmtadministrador = conexion.prepareStatement("INSERT INTO administrador VALUES (?,?)");
         	stmtadministrador.setInt(1,idadministrador+1);
         	stmtadministrador.setInt(2,idpersona+1);
       
