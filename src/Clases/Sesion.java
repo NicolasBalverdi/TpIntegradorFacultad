@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Sesion {
-	public void comprobar(Connection conexion) {
+	public void comprobar(Connection conexion) throws SQLException {
 		Scanner sn = new Scanner(System.in);
         boolean salir = false;
         int opcion;
