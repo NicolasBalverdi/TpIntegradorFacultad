@@ -21,12 +21,17 @@ public class Sesion {
  
                 System.out.println("Escribe una de las opciones");
                 opcion = sn.nextInt();
+                
+                System.out.println("Usuario");
+            	String user = sn.nextLine();
+            	System.out.println("Contraseña");
+            	String pass = sn.nextLine();
  
                 switch (opcion) {
-                    case 1:
+                    case 1:                    	
                         sesionAdministrador(conexion);
                         break;
-                    case 2:
+                    case 2:                    	
                         sesionAlumno(conexion);
                         break;
                     case 3:
